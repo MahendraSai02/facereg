@@ -1,5 +1,1 @@
-import streamlit as st
-
-st.title('🎈 App Name')
-
-st.write('Hello world!')
+app/streamlit_app.py

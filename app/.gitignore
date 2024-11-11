@@ -1,0 +1,5 @@
+.packages/
+.venv/
+app.zip
+__pycache__
+TODO.md

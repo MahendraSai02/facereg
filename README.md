@@ -23,3 +23,8 @@ This is filler text, please replace this with a explanatory text about further r
 - Resource 1
 - Resource 2
 - Resource 3
+
+
+## GitHub Workflow
+
+The [GitHub workflow](./.github/workflows/sis.yml) allows you to deploy this application to Snowflake.
