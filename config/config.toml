@@ -1,0 +1,5 @@
+default_connection_name = "workflow"
+
+[connections]
+[connections.workflow]
+authenticator="SNOWFLAKE_JWT"

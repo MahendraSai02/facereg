@@ -1,0 +1,20 @@
+definition_version: "2"
+env:
+    STREAMLIT_APP_NAME: my_app
+    STREAMLIT_APP_DB: my_app_db
+    STREAMLIT_APP_SCHEMA: apps
+    STREAMLIT_APP_WH: my_wh
+entities:
+    todos_app:
+        type: streamlit
+        identifier:
+            name: <% ctx.env.STREAMLIT_APP_NAME %>
+            database: <% ctx.env.STREAMLIT_APP_DB %>
+            schema: <% ctx.env.STREAMLIT_APP_SCHEMA %>
+        main_file: streamlit_app.py
+        query_warehouse: <% ctx.env.STREAMLIT_APP_WH %>
+        stage: <% ctx.env.STREAMLIT_APP_NAME %>
+        artifacts:
+            - streamlit_app.py
+            - environment.yml
+            - common/data_utils.py

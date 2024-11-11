@@ -1,0 +1,60 @@
+name: Deploy to Streamlit in Snowflake
+on:
+    # manual trigger
+    workflow_dispatch:
+    # TODO other triggers
+    # does build and deploy app on push
+    # push:
+    #     paths:
+    #         - "data/*.csv"
+    #         - "app/**"
+    #         - "streamlit_app.py"
+env:
+    SNOWFLAKE_DEFAULT_CONNECTION_NAME: "workflow"
+    SNOWFLAKE_CONNECTIONS_WORKFLOW_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+    SNOWFLAKE_CONNECTIONS_WORKFLOW_USER: ${{ secrets.SNOWFLAKE_USER }}
+    SNOWFLAKE_CONNECTIONS_WORKFLOW_PRIVATE_KEY_PASSPHRASE:
+        ${{ secrets.PRIVATE_KEY_PASSPHRASE }}
+    SNOWFLAKE_CONNECTIONS_WORKFLOW_PRIVATE_KEY_RAW:
+        ${{ secrets.PRIVATE_KEY_RAW }}
+    # update it as per your application settings
+    STREAMLIT_APP_NAME: my_app
+    STREAMLIT_APP_WH: my_wh
+    STREAMLIT_APP_DB: my_app_db
+    STREAMLIT_APP_SCHEMA: apps
+    STREAMLIT_APP_DATA_SCHEMA: data
+jobs:
+    Deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  ref: ${{ env.GITHUB_REF_NAME  }}
+            - uses: Snowflake-Labs/snowflake-cli-action@v1.5
+              with:
+                  cli-version: "latest"
+                  default-config-file-path:
+                      ${{ github.workspace }}/config/config.toml
+            - name: Check Version and Verify Connection
+              env:
+                  PRIVATE_KEY_PASSPHRASE: ${{ secrets.PRIVATE_KEY_PASSPHRASE }}
+              run: |
+                  snow --version
+                  snow connection test
+                  echo "Using branch $GITHUB_REF_NAME"
+
+            - name: Deploy Streamlit App
+              env:
+                  PRIVATE_KEY_PASSPHRASE: ${{ secrets.PRIVATE_KEY_PASSPHRASE }}
+              run: |
+                  snow streamlit deploy --replace \
+                  --database $STREAMLIT_APP_DB --schema $STREAMLIT_APP_SCHEMA
+              working-directory: app
+
+            - name: Get App URL
+              env:
+                  PRIVATE_KEY_PASSPHRASE: ${{ secrets.PRIVATE_KEY_PASSPHRASE }}
+              run: |
+                  snow streamlit get-url $STREAMLIT_APP_NAME \
+                     --database $STREAMLIT_APP_DB --schema $STREAMLIT_APP_SCHEMA
+              working-directory: app
