@@ -1,1 +1,6 @@
-streamlit>=1.26.0
+streamlit
+opencv-python
+face_recognition
+numpy
+pandas
+dlib
