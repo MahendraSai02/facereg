@@ -1,4 +1,4 @@
-# 📦 Streamlit App Starter Kit 
+#  😍 face recognization app 
 ```
 ⬆️ (Replace above with your app's name)
 ```
